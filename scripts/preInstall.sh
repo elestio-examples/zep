@@ -11,8 +11,9 @@ ZEP_AUTH_SECRET=${SECRET}
 EOT
 
 cat << EOT >> ./token.sh
-set -o allexport; source .env; set +o allexport;
 #!/bin/bash
+set -o allexport; source .env; set +o allexport;
+
 HEADER='{"alg": "HS256", "typ": "JWT"}'
 PAYLOAD='{"username": "admin"}'
 ENCODED_HEADER=\$(echo -n "\$HEADER" | base64 | tr -d '=' | tr '/+' '_-')
