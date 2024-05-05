@@ -7,17 +7,6 @@ ports:
     public: true
     path: "/"
     isAuth: false
-  - protocol: "HTTPS"
-    targetProtocol: "HTTP"
-    listeningPort: "23769"
-    targetPort: "30052"
-    targetIP: "172.17.0.1"
-    public: true
-    path: "/admin"
-    isAuth: true
-    login: "root"
-    password: "random_password"
-    loginTitle: "Zep UI"
 environments:
   - key: "SOFTWARE_VERSION_TAG"
     value: "latest"
