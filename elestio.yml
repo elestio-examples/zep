@@ -16,6 +16,8 @@ environments:
     value: "random_password"
   - key: "ZEP_OPENAI_API_KEY"
     value: "<YOUR_OPENAI_API_KEY>"
+  - key: "ZEP_AUTH_REQUIRED"
+    value: "true"
 
 config:
   runTime: "dockerCompose"
