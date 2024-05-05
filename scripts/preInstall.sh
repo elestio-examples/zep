@@ -19,7 +19,7 @@ PAYLOAD='{"username": "admin"}'
 ENCODED_HEADER=\$(echo -n "\$HEADER" | base64 | tr -d '=' | tr '/+' '_-')
 ENCODED_PAYLOAD=\$(echo -n "\$PAYLOAD" | base64 | tr -d '=' | tr '/+' '_-')
 DATA="\$ENCODED_HEADER.\$ENCODED_PAYLOAD"
-SIGNATURE=\$(echo -n "\$DATA" | openssl dgst -binary -sha256 -hmac "\$ZEP_AUTH_SECRET" | base64 | tr -d '=' | tr '/+' '_-')
+SIGNATURE=\$(echo -n "\$DATA" | openssl dgst -binary -sha256 -hmac "$SECRET" | base64 | tr -d '=' | tr '/+' '_-')
 TOKEN="\$DATA.\$SIGNATURE"
 
 echo "Generated JWT token: \$TOKEN"
