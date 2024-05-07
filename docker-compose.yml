@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.3"
 services:
   db:
     image: ghcr.io/getzep/postgres:latest
@@ -7,25 +7,23 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${ADMIN_PASSWORD}
-    # networks:
-    #   - zep-network
     volumes:
       - ./zep-db:/var/lib/postgresql/data
+
   nlp:
     image: ghcr.io/getzep/zep-nlp-server:latest
     env_file:
-      - .env # You can set your embedding-related variables here
+      - ./.env
     restart: always
-    # networks:
-    #   - zep-network
+
   zep:
     image: ghcr.io/getzep/zep:latest
     restart: always
     depends_on:
       - db
       - nlp
-    ports:
-      - "172.17.0.1:30052:8000"
+    # ports:
+    #   - "172.17.0.1:30052:8000"
     volumes:
       - ./config.yaml:/app/config.yaml
     environment:
@@ -38,9 +36,15 @@ services:
       - ZEP_EXTRACTORS_MESSAGES_SUMMARIZER_EMBEDDINGS_SERVICE=openai
       - ZEP_EXTRACTORS_MESSAGES_SUMMARIZER_EMBEDDINGS_DIMENSIONS=1536
     env_file:
-      - .env # Store your OpenAI API key here as ZEP_OPENAI_API_KEY
-    # networks:
-    #   - zep-network
-# networks:
-#   zep-network:
-#     driver: bridge
+      - ./.env # Store your OpenAI API key here as ZEP_OPENAI_API_KEY
+
+  nginx:
+    image: nginx
+    ports:
+      - 172.17.0.1:30052:80
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/:ro
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
+    restart: always
+    depends_on:
+      - zep

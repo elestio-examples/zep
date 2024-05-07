@@ -26,3 +26,19 @@ echo "Generated JWT token: \$TOKEN"
 EOT
 
 chmod +x ./token.sh
+
+
+
+generate_encrypted_password() {
+    local password="$1"
+    local salt=$(openssl rand -base64 6)
+    local encrypted_password=$(openssl passwd -apr1 -salt "$salt" "$password")
+    echo "$encrypted_password"
+}
+
+encrypted=$(generate_encrypted_password "$ADMIN_PASSWORD")
+echo "Encrypted password: $encrypted"
+
+cat << EOT >> ./.htpasswd
+root:${encrypted}
+EOT
