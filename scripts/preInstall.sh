@@ -17,7 +17,11 @@ else
   echo "${VARIABLE} already exists in .env"
 fi
 
-cat << EOT >> ./token.sh
+TOKEN_FILE="./token.sh"
+
+# Check if the token.sh file already exists
+if [ ! -f "$TOKEN_FILE" ]; then
+   cat << EOT >> ./token.sh
 #!/bin/bash
 set -o allexport; source .env; set +o allexport;
 
@@ -31,8 +35,12 @@ TOKEN="\$DATA.\$SIGNATURE"
 
 echo "Generated JWT token: \$TOKEN"
 EOT
-
-chmod +x ./token.sh
+  # Make the token.sh script executable
+  chmod +x "$TOKEN_FILE"
+  echo "Created and set executable permissions for $TOKEN_FILE"
+else
+  echo "$TOKEN_FILE already exists"
+fi
 
 
 
