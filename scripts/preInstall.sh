@@ -51,9 +51,19 @@ generate_encrypted_password() {
     echo "$encrypted_password"
 }
 
-encrypted=$(generate_encrypted_password "$ADMIN_PASSWORD")
-echo "Encrypted password: $encrypted"
+# Path to the .htpasswd file
+HTPASSWD_FILE="./.htpasswd"
 
-cat << EOT >> ./.htpasswd
+# Check if the .htpasswd file exists
+if [ ! -f "$HTPASSWD_FILE" ]; then
+    # If not found, generate the encrypted password and create the .htpasswd file
+    encrypted=$(generate_encrypted_password "$ADMIN_PASSWORD")
+    echo "Encrypted password: $encrypted"
+
+    cat << EOT >> "$HTPASSWD_FILE"
 root:${encrypted}
 EOT
+    echo "Created $HTPASSWD_FILE with encrypted password for root user."
+else
+    echo "$HTPASSWD_FILE already exists."
+fi
