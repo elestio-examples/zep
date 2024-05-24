@@ -4,11 +4,18 @@ set -o allexport; source .env; set +o allexport;
 
 SECRET=$(openssl rand -hex 32)
 
-cat << EOT >> ./.env
+# The variable and its value
+VARIABLE="ZEP_AUTH_SECRET"
+VALUE="${SECRET}"
 
-ZEP_AUTH_SECRET=${SECRET}
-
-EOT
+# Check if the variable is already in the .env file
+if ! grep -q "^${VARIABLE}=" ./.env; then
+  # If not found, append it to the .env file
+  echo "${VARIABLE}=${VALUE}" >> .env
+  echo "Added ${VARIABLE} to .env"
+else
+  echo "${VARIABLE} already exists in .env"
+fi
 
 cat << EOT >> ./token.sh
 #!/bin/bash
